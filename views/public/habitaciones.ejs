@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/header') %>
+
+<section class="hero" style="padding-bottom: 40px;">
+  <div class="container hero-inner" style="padding-bottom: 60px;">
+    <div class="eyebrow">Alojamiento</div>
+    <h1 class="headline" style="font-size: clamp(2.2rem, 5vw, 3.6rem);">NUESTRAS<br><span class="accent">HABITACIONES</span></h1>
+    <p class="lede">Tres tipos de ambientes, cada uno pensado para distintas formas de viajar.</p>
+  </div>
+</section>
+<div class="torn-divider"></div>
+
+<section>
+  <div class="container">
+    <div class="room-grid">
+      <% tipos.forEach(function(t) { %>
+        <div class="room-card">
+          <div class="thumb"><span class="tag"><%= t.capacidad %> <%= t.capacidad == 1 ? 'huésped' : 'huéspedes' %></span></div>
+          <div class="body">
+            <h3><%= t.nombre %></h3>
+            <p><%= t.descripcion %></p>
+            <div class="price">S/ <%= Number(t.precio_base).toFixed(0) %> <span>/ noche</span></div>
+            <a href="/reserva" class="btn btn-clay">Reservar esta habitación</a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>
+</body>
+</html>

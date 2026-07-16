@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><%- include('../partials/head') %></head>
+<body>
+<div class="auth-shell">
+  <div class="auth-card">
+    <div class="brand-mark">
+      <div>HOTEL CASA BLANCA<small>PANEL ADMINISTRATIVO</small></div>
+    </div>
+    <%- include('../partials/flash') %>
+    <form action="/admin/login" method="POST">
+      <div class="field"><label>Correo electrónico</label><input type="email" name="email" required autofocus></div>
+      <div class="field"><label>Contraseña</label><input type="password" name="password" required></div>
+      <button type="submit" class="btn btn-clay" style="width:100%;">Ingresar</button>
+    </form>
+    <p style="margin-top:20px; font-size:0.8rem; text-align:center;"><a href="/" style="color:var(--clay-dark);">← Volver al sitio</a></p>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/header') %>
+
+<section class="hero" style="padding-bottom: 40px;">
+  <div class="container hero-inner" style="padding-bottom: 60px;">
+    <div class="eyebrow">Paso 2 de 3</div>
+    <h1 class="headline" style="font-size: clamp(2rem, 4.5vw, 3.2rem);">HABITACIONES<br><span class="accent">DISPONIBLES</span></h1>
+    <p class="lede"><%= checkin %> → <%= checkout %> · <%= huespedes %> huésped(es)</p>
+  </div>
+</section>
+<div class="torn-divider"></div>
+
+<section>
+  <div class="container">
+    <% if (!habitaciones.length) { %>
+      <div class="card">
+        <p>No encontramos habitaciones disponibles para esas fechas. Prueba con otro rango de días o <a href="/contacto" style="color: var(--clay-dark); text-decoration: underline;">contáctanos directamente</a>.</p>
+      </div>
+    <% } else { %>
+      <div class="room-grid">
+        <% habitaciones.forEach(function(h) { %>
+          <div class="room-card">
+            <div class="thumb"><span class="tag">Hab. <%= h.numero %></span></div>
+            <div class="body">
+              <h3><%= h.tipo_nombre %></h3>
+              <p>Piso <%= h.piso %> · hasta <%= h.capacidad %> huésped(es)</p>
+              <div class="price">S/ <%= Number(h.precio_base).toFixed(0) %> <span>/ noche</span></div>
+              <a class="btn btn-clay" href="/reserva/datos?habitacion_id=<%= h.id %>&checkin=<%= checkin %>&checkout=<%= checkout %>&huespedes=<%= huespedes %>">Elegir esta habitación</a>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>
+</body>
+</html>

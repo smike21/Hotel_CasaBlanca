@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/header') %>
+
+<section class="hero">
+  <div class="hero-photo" style="background-image: url('/img/portada-hotel.png');"></div>
+  <div class="container hero-inner">
+    <div class="eyebrow">La Unión · Huánuco</div>
+    <h1 class="headline">SE SIENTE<br><span class="accent">COMO EN CASA</span></h1>
+    <p class="lede">Hotel Casa Blanca es el punto de descanso de referencia en La Unión: limpieza, comodidad y un trato personalizado en cada una de nuestras 14 habitaciones.</p>
+    <div class="hero-actions">
+      <a href="/reserva" class="btn btn-clay">Reservar ahora</a>
+      <a href="/habitaciones" class="btn btn-outline">Ver habitaciones</a>
+    </div>
+  </div>
+</section>
+<div class="torn-divider"></div>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="booking-bar">
+      <form action="/reserva/buscar" method="POST" style="display:contents;">
+        <div class="field">
+          <label>Check-in</label>
+          <input type="date" name="checkin" required>
+        </div>
+        <div class="field">
+          <label>Check-out</label>
+          <input type="date" name="checkout" required>
+        </div>
+        <div class="field">
+          <label>Huéspedes</label>
+          <input type="number" name="huespedes" min="1" value="2">
+        </div>
+        <div class="field">
+          <label>&nbsp;</label>
+          <span style="font-size:0.85rem; color:#77685A;">Elige tus fechas para ver disponibilidad</span>
+        </div>
+        <button type="submit" class="btn btn-clay" style="height: 46px;">Buscar</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="section-label">Nuestras habitaciones</div>
+        <h2 class="section-title">Tres ambientes pensados para cada viajero</h2>
+      </div>
+      <a href="/habitaciones" class="btn btn-ghost-dark">Ver todas</a>
+    </div>
+    <div class="room-grid">
+      <% tipos.forEach(function(t) { %>
+        <div class="room-card">
+          <div class="thumb"><span class="tag"><%= t.capacidad %> <%= t.capacidad == 1 ? 'huésped' : 'huéspedes' %></span></div>
+          <div class="body">
+            <h3><%= t.nombre %></h3>
+            <p><%= t.descripcion %></p>
+            <div class="price">S/ <%= Number(t.precio_base).toFixed(0) %> <span>/ noche</span></div>
+            <a href="/reserva" class="btn btn-ghost-dark">Reservar</a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="dark-section">
+  <div class="container grid-2">
+    <div>
+      <div class="section-label" style="color: var(--gold);">Nuestra promesa</div>
+      <h2 class="section-title">Crecimos de 7 a 14 habitaciones sin perder el trato de casa</h2>
+      <p style="color: rgba(244,238,226,0.78); max-width: 48ch; margin-top: 16px;">Empezamos como un negocio familiar y hoy somos el hospedaje de referencia durante las festividades de La Unión, gracias a la reinversión constante y al cuidado de cada detalle.</p>
+    </div>
+    <div class="grid-3">
+      <div class="stat"><div class="num">14</div><div class="label">Habitaciones</div></div>
+      <div class="stat"><div class="num">3</div><div class="label">Tipos de ambiente</div></div>
+      <div class="stat"><div class="num">100%</div><div class="label">Capital propio</div></div>
+    </div>
+  </div>
+</section>
+
+<% if (resenas && resenas.length) { %>
+<section>
+  <div class="container">
+    <div class="section-label">Lo que dicen nuestros huéspedes</div>
+    <h2 class="section-title" style="margin-bottom: 40px;">Experiencias reales</h2>
+    <div class="grid-3">
+      <% resenas.forEach(function(r) { %>
+        <div class="review-card">
+          <div class="stars"><%= '★'.repeat(r.calificacion) %><%= '☆'.repeat(5 - r.calificacion) %></div>
+          <p style="font-size:0.92rem; color:#4a3f34;"><%= r.comentario %></p>
+          <div class="who"><%= r.nombres %> <%= r.apellidos %></div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<%- include('../partials/footer') %>
+</body>
+</html>

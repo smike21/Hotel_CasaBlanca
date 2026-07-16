@@ -1,0 +1,16 @@
+<div class="admin-sidebar">
+  <div class="brand-mark">
+    <div>HOTEL CASA BLANCA<small>PANEL</small></div>
+  </div>
+  <nav>
+    <a href="/admin/dashboard" class="<%= active === 'dashboard' ? 'active' : '' %>">Resumen</a>
+    <a href="/admin/reservas" class="<%= active === 'reservas' ? 'active' : '' %>">Reservas</a>
+    <a href="/admin/habitaciones" class="<%= active === 'habitaciones' ? 'active' : '' %>">Habitaciones</a>
+    <a href="/admin/tipos-habitacion" class="<%= active === 'tipos' ? 'active' : '' %>">Tipos de habitación</a>
+    <a href="/admin/huespedes" class="<%= active === 'huespedes' ? 'active' : '' %>">Huéspedes</a>
+    <a href="/admin/mensajes" class="<%= active === 'mensajes' ? 'active' : '' %>">Mensajes</a>
+    <form action="/admin/logout" method="POST" style="margin-top:20px;">
+      <button type="submit" class="btn btn-outline" style="width:100%;">Cerrar sesión</button>
+    </form>
+  </nav>
+</div>

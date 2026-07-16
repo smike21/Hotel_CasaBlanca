@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/header') %>
+
+<section class="hero" style="padding-bottom: 40px;">
+  <div class="container hero-inner" style="padding-bottom: 60px;">
+    <div class="eyebrow">Paso 1 de 3</div>
+    <h1 class="headline" style="font-size: clamp(2.2rem, 5vw, 3.6rem);">RESERVA TU<br><span class="accent">ESTADÍA</span></h1>
+    <p class="lede">Dinos tus fechas y te mostramos las habitaciones disponibles al instante.</p>
+  </div>
+</section>
+<div class="torn-divider"></div>
+
+<section class="section-tight">
+  <div class="container" style="max-width: 640px;">
+    <div class="card">
+      <%- include('../partials/flash') %>
+      <form action="/reserva/buscar" method="POST">
+        <div class="field"><label>Check-in</label><input type="date" name="checkin" required></div>
+        <div class="field"><label>Check-out</label><input type="date" name="checkout" required></div>
+        <div class="field"><label>Número de huéspedes</label><input type="number" name="huespedes" min="1" value="2"></div>
+        <button type="submit" class="btn btn-clay" style="width:100%;">Buscar disponibilidad</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>
+</body>
+</html>

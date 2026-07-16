@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><%- include('../partials/head') %></head>
+<body>
+<div class="admin-shell">
+  <%- include('../partials/admin-sidebar', { active: 'huespedes' }) %>
+  <main class="admin-main">
+    <div class="admin-topbar"><h1>Huéspedes</h1></div>
+    <%- include('../partials/flash') %>
+
+    <table class="data">
+      <thead><tr><th>Nombre</th><th>Documento</th><th>Email</th><th>Teléfono</th><th>Reservas</th></tr></thead>
+      <tbody>
+        <% huespedes.forEach(function(h) { %>
+          <tr>
+            <td><%= h.nombres %> <%= h.apellidos %></td>
+            <td><%= h.tipo_documento %> <%= h.numero_documento %></td>
+            <td><%= h.email || '—' %></td>
+            <td><%= h.telefono || '—' %></td>
+            <td><%= h.total_reservas %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><%- include('../partials/head') %></head>
+<body>
+<div class="admin-shell">
+  <%- include('../partials/admin-sidebar', { active: 'dashboard' }) %>
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <h1>Hola, <%= usuario.nombres %></h1>
+    </div>
+    <%- include('../partials/flash') %>
+
+    <div class="stat-cards">
+      <div class="stat-card"><div class="num"><%= ocupacion.ocupadas %>/<%= ocupacion.total %></div><div class="label">Habitaciones ocupadas</div></div>
+      <div class="stat-card"><div class="num"><%= reservasHoy %></div><div class="label">Check-ins hoy</div></div>
+      <div class="stat-card"><div class="num"><%= pendientes %></div><div class="label">Reservas pendientes</div></div>
+      <div class="stat-card"><div class="num">S/ <%= Number(ingresosMes).toFixed(0) %></div><div class="label">Ingresos del mes</div></div>
+    </div>
+
+    <h2 style="font-size:1.2rem; margin-bottom: 16px;">Últimas reservas</h2>
+    <table class="data">
+      <thead><tr><th>Código</th><th>Huésped</th><th>Check-in</th><th>Check-out</th><th>Estado</th></tr></thead>
+      <tbody>
+        <% proximasReservas.forEach(function(r) { %>
+          <tr>
+            <td><%= r.codigo %></td>
+            <td><%= r.nombres %> <%= r.apellidos %></td>
+            <td><%= new Date(r.fecha_checkin).toLocaleDateString('es-PE') %></td>
+            <td><%= new Date(r.fecha_checkout).toLocaleDateString('es-PE') %></td>
+            <td><span class="badge badge-<%= r.estado.toLowerCase() %>"><%= r.estado %></span></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/header') %>
+
+<section class="hero" style="padding-bottom: 40px;">
+  <div class="container hero-inner" style="padding-bottom: 60px;">
+    <div class="eyebrow">Escríbenos</div>
+    <h1 class="headline" style="font-size: clamp(2.2rem, 5vw, 3.6rem);">HABLEMOS<br><span class="accent">DE TU ESTADÍA</span></h1>
+  </div>
+</section>
+<div class="torn-divider"></div>
+
+<section>
+  <div class="container grid-2">
+    <div>
+      <div class="section-label">Datos de contacto</div>
+      <h2 class="section-title" style="font-size: 1.6rem;">Estamos para ayudarte</h2>
+      <p style="margin-top: 16px; color:#4a3f34;">📍 La Unión, Huánuco, Perú</p>
+      <p style="color:#4a3f34;">📞 +51 999 999 999</p>
+      <p style="color:#4a3f34;">✉️ contacto@hotelcasablanca.pe</p>
+    </div>
+    <div class="card">
+      <%- include('../partials/flash') %>
+      <form action="/contacto" method="POST">
+        <div class="field"><label>Nombre completo</label><input type="text" name="nombre" required></div>
+        <div class="field"><label>Correo electrónico</label><input type="email" name="email" required></div>
+        <div class="field"><label>Teléfono (opcional)</label><input type="text" name="telefono"></div>
+        <div class="field"><label>Mensaje</label><textarea name="mensaje" rows="4" required></textarea></div>
+        <button type="submit" class="btn btn-clay" style="width:100%;">Enviar mensaje</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>
+</body>
+</html>

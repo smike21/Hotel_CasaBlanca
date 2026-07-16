@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/header') %>
+
+<section class="section-tight">
+  <div class="container" style="max-width: 640px; text-align:center; padding: 60px 0;">
+    <div class="section-label">Reserva confirmada</div>
+    <h1 class="section-title">¡Gracias! Tu reserva quedó registrada</h1>
+    <div class="card" style="margin-top: 30px; text-align:left;">
+      <p><strong>Código de reserva:</strong> <%= codigo %></p>
+      <p><strong>Noches:</strong> <%= noches %></p>
+      <p><strong>Total a pagar:</strong> S/ <%= Number(total).toFixed(2) %></p>
+      <p style="margin-top: 16px; color:#4a3f34;">Guarda este código: te lo pediremos al llegar al hotel. Nuestro equipo confirmará tu reserva por correo o teléfono en las próximas horas.</p>
+    </div>
+    <a href="/" class="btn btn-ghost-dark" style="margin-top: 26px;">Volver al inicio</a>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>
+</body>
+</html>

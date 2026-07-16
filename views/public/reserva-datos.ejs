@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/header') %>
+
+<section class="hero" style="padding-bottom: 40px;">
+  <div class="container hero-inner" style="padding-bottom: 60px;">
+    <div class="eyebrow">Paso 3 de 3</div>
+    <h1 class="headline" style="font-size: clamp(2rem, 4.5vw, 3.2rem);">TUS<br><span class="accent">DATOS</span></h1>
+    <p class="lede">Solo un paso más para confirmar tu reserva.</p>
+  </div>
+</section>
+<div class="torn-divider"></div>
+
+<section class="section-tight">
+  <div class="container" style="max-width: 640px;">
+    <div class="card">
+      <%- include('../partials/flash') %>
+      <form action="/reserva/confirmar" method="POST">
+        <input type="hidden" name="habitacion_id" value="<%= habitacion_id %>">
+        <input type="hidden" name="checkin" value="<%= checkin %>">
+        <input type="hidden" name="checkout" value="<%= checkout %>">
+        <input type="hidden" name="num_huespedes" value="<%= huespedes %>">
+
+        <div class="modal-form">
+          <div class="field"><label>Nombres</label><input type="text" name="nombres" required></div>
+          <div class="field"><label>Apellidos</label><input type="text" name="apellidos" required></div>
+          <div class="field">
+            <label>Tipo de documento</label>
+            <select name="tipo_documento">
+              <option value="DNI">DNI</option>
+              <option value="Pasaporte">Pasaporte</option>
+              <option value="CE">Carné de extranjería</option>
+            </select>
+          </div>
+          <div class="field"><label>Número de documento</label><input type="text" name="numero_documento" required></div>
+          <div class="field"><label>Correo electrónico</label><input type="email" name="email" required></div>
+          <div class="field"><label>Teléfono</label><input type="text" name="telefono" required></div>
+        </div>
+        <button type="submit" class="btn btn-clay" style="width:100%; margin-top: 10px;">Confirmar reserva</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>
+</body>
+</html>

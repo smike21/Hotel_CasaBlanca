@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><%- include('../partials/head') %></head>
+<body>
+<div class="admin-shell">
+  <%- include('../partials/admin-sidebar', { active: 'habitaciones' }) %>
+  <main class="admin-main">
+    <div class="admin-topbar"><h1>Habitaciones</h1></div>
+    <%- include('../partials/flash') %>
+
+    <div class="card" style="margin-bottom: 30px;">
+      <h2 style="font-size:1rem; margin-bottom: 16px;">Añadir habitación</h2>
+      <form action="/admin/habitaciones" method="POST" class="modal-form">
+        <div class="field"><label>Número</label><input type="text" name="numero" required></div>
+        <div class="field">
+          <label>Tipo</label>
+          <select name="tipo_id" required>
+            <% tipos.forEach(function(t) { %><option value="<%= t.id %>"><%= t.nombre %></option><% }) %>
+          </select>
+        </div>
+        <div class="field">
+          <label>Estado inicial</label>
+          <select name="estado_id" required>
+            <% estados.forEach(function(e) { %><option value="<%= e.id %>"><%= e.nombre %></option><% }) %>
+          </select>
+        </div>
+        <div class="field"><label>Piso</label><input type="number" name="piso" value="1" required></div>
+        <div class="field full"><label>Descripción (opcional)</label><input type="text" name="descripcion"></div>
+        <div class="full"><button type="submit" class="btn btn-clay">Guardar habitación</button></div>
+      </form>
+    </div>
+
+    <table class="data">
+      <thead><tr><th>N°</th><th>Tipo</th><th>Piso</th><th>Estado</th><th>Actualizar</th><th></th></tr></thead>
+      <tbody>
+        <% habitaciones.forEach(function(h) { %>
+          <tr>
+            <td><%= h.numero %></td>
+            <td><%= h.tipo_nombre %></td>
+            <td><%= h.piso %></td>
+            <td><span class="badge badge-<%= h.estado_nombre.toLowerCase() %>"><%= h.estado_nombre %></span></td>
+            <td>
+              <form action="/admin/habitaciones/<%= h.id %>/estado" method="POST" style="display:flex; gap:8px;">
+                <select name="estado_id">
+                  <% estados.forEach(function(e) { %>
+                    <option value="<%= e.id %>" <%= e.id === h.estado_id ? 'selected' : '' %>><%= e.nombre %></option>
+                  <% }) %>
+                </select>
+                <button type="submit" class="btn btn-ghost-dark">Cambiar</button>
+              </form>
+            </td>
+            <td>
+              <form action="/admin/habitaciones/<%= h.id %>/eliminar" method="POST" onsubmit="return confirm('¿Desactivar esta habitación?');">
+                <button type="submit" class="btn btn-outline" style="color:#8A2F26; border-color:#8A2F26;">Desactivar</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </main>
+</div>
+</body>
+</html>

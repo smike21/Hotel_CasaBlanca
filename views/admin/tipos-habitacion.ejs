@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><%- include('../partials/head') %></head>
+<body>
+<div class="admin-shell">
+  <%- include('../partials/admin-sidebar', { active: 'tipos' }) %>
+  <main class="admin-main">
+    <div class="admin-topbar"><h1>Tipos de habitación</h1></div>
+    <%- include('../partials/flash') %>
+
+    <div class="card" style="margin-bottom: 30px;">
+      <h2 style="font-size:1rem; margin-bottom: 16px;">Nuevo tipo</h2>
+      <form action="/admin/tipos-habitacion" method="POST" class="modal-form">
+        <div class="field"><label>Nombre</label><input type="text" name="nombre" required></div>
+        <div class="field"><label>Capacidad</label><input type="number" name="capacidad" required></div>
+        <div class="field"><label>Precio base (S/ por noche)</label><input type="number" step="0.01" name="precio_base" required></div>
+        <div class="field full"><label>Descripción</label><input type="text" name="descripcion"></div>
+        <div class="full"><button type="submit" class="btn btn-clay">Guardar tipo</button></div>
+      </form>
+    </div>
+
+    <table class="data">
+      <thead><tr><th>Nombre</th><th>Capacidad</th><th>Precio base</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <% tipos.forEach(function(t) { %>
+          <tr>
+            <td><%= t.nombre %></td>
+            <td><%= t.capacidad %></td>
+            <td>S/ <%= Number(t.precio_base).toFixed(2) %></td>
+            <td><%= t.descripcion || '—' %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </main>
+</div>
+</body>
+</html>
