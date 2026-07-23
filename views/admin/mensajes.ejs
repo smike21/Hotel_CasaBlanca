@@ -8,7 +8,7 @@
     <div class="admin-topbar"><h1>Mensajes de contacto</h1></div>
     <%- include('../partials/flash') %>
 
-    <table class="data">
+    <div class="table-scroll"><table class="data">
       <thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Mensaje</th><th>Fecha</th></tr></thead>
       <tbody>
         <% mensajes.forEach(function(m) { %>
@@ -21,7 +21,7 @@
           </tr>
         <% }) %>
       </tbody>
-    </table>
+    </table></div>
   </main>
 </div>
 </body>

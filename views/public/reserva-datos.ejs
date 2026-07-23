@@ -18,6 +18,7 @@
     <div class="card">
       <%- include('../partials/flash') %>
       <form action="/reserva/confirmar" method="POST">
+        <%- include('../partials/csrf') %>
         <input type="hidden" name="habitacion_id" value="<%= habitacion_id %>">
         <input type="hidden" name="checkin" value="<%= checkin %>">
         <input type="hidden" name="checkout" value="<%= checkout %>">

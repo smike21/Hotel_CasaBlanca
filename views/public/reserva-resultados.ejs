@@ -23,7 +23,7 @@
       <div class="room-grid">
         <% habitaciones.forEach(function(h) { %>
           <div class="room-card">
-            <div class="thumb"><span class="tag">Hab. <%= h.numero %></span></div>
+            <div class="thumb"><% if (h.foto) { %><img src="<%= h.foto %>" alt="Habitación <%= h.tipo_nombre %>" loading="lazy"><% } %><span class="tag">Hab. <%= h.numero %></span></div>
             <div class="body">
               <h3><%= h.tipo_nombre %></h3>
               <p>Piso <%= h.piso %> · hasta <%= h.capacidad %> huésped(es)</p>

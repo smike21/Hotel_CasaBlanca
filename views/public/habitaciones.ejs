@@ -18,7 +18,7 @@
     <div class="room-grid">
       <% tipos.forEach(function(t) { %>
         <div class="room-card">
-          <div class="thumb"><span class="tag"><%= t.capacidad %> <%= t.capacidad == 1 ? 'huésped' : 'huéspedes' %></span></div>
+          <div class="thumb"><% if (t.foto) { %><img src="<%= t.foto %>" alt="Habitación <%= t.nombre %>" loading="lazy"><% } %><span class="tag"><%= t.capacidad %> <%= t.capacidad == 1 ? 'huésped' : 'huéspedes' %></span></div>
           <div class="body">
             <h3><%= t.nombre %></h3>
             <p><%= t.descripcion %></p>

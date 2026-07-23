@@ -10,6 +10,7 @@
     <a href="/admin/huespedes" class="<%= active === 'huespedes' ? 'active' : '' %>">Huéspedes</a>
     <a href="/admin/mensajes" class="<%= active === 'mensajes' ? 'active' : '' %>">Mensajes</a>
     <form action="/admin/logout" method="POST" style="margin-top:20px;">
+      <%- include('csrf') %>
       <button type="submit" class="btn btn-outline" style="width:100%;">Cerrar sesión</button>
     </form>
   </nav>

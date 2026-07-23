@@ -25,7 +25,10 @@ router.get('/', async (req, res, next) => {
 router.get('/habitaciones', async (req, res, next) => {
   try {
     const pool = await getPool();
-    const tipos = await pool.request().query('SELECT * FROM TiposHabitacion ORDER BY precio_base DESC');
+    const tipos = await pool.request().query(`
+      SELECT th.*, (SELECT TOP 1 url FROM FotosHabitacion f WHERE f.tipo_id = th.id ORDER BY orden) AS foto
+      FROM TiposHabitacion th ORDER BY th.precio_base DESC
+    `);
     res.render('public/habitaciones', { titulo: 'Habitaciones | Hotel Casa Blanca', tipos: tipos.recordset });
   } catch (err) { next(err); }
 });
@@ -40,7 +43,14 @@ router.get('/contacto', (req, res) => {
 
 router.post('/contacto', async (req, res, next) => {
   try {
-    const { nombre, email, telefono, mensaje } = req.body;
+    const nombre = req.body.nombre?.trim();
+    const email = req.body.email?.trim().toLowerCase();
+    const telefono = req.body.telefono?.trim();
+    const mensaje = req.body.mensaje?.trim();
+    if (!nombre || nombre.length > 120 || !email || email.length > 150 || !/^\S+@\S+\.\S+$/.test(email) || !mensaje || mensaje.length > 1000 || (telefono && telefono.length > 20)) {
+      req.flash('error', 'Revisa los datos del formulario e inténtalo nuevamente.');
+      return res.redirect('/contacto');
+    }
     const pool = await getPool();
     await pool.request()
       .input('nombre', sql.VarChar, nombre)

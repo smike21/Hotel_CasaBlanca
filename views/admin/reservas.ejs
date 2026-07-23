@@ -8,7 +8,7 @@
     <div class="admin-topbar"><h1>Reservas</h1></div>
     <%- include('../partials/flash') %>
 
-    <table class="data">
+    <div class="table-scroll"><table class="data">
       <thead><tr><th>Código</th><th>Huésped</th><th>Habitación(es)</th><th>Check-in</th><th>Check-out</th><th>Total</th><th>Estado</th></tr></thead>
       <tbody>
         <% reservas.forEach(function(r) { %>
@@ -21,6 +21,7 @@
             <td>S/ <%= Number(r.total).toFixed(2) %></td>
             <td>
               <form action="/admin/reservas/<%= r.id %>/estado" method="POST" style="display:flex; gap:8px;">
+                <%- include('../partials/csrf') %>
                 <select name="estado_id">
                   <% estados.forEach(function(e) { %>
                     <option value="<%= e.id %>" <%= e.id === r.estado_id ? 'selected' : '' %>><%= e.nombre %></option>
@@ -32,7 +33,7 @@
           </tr>
         <% }) %>
       </tbody>
-    </table>
+    </table></div>
   </main>
 </div>
 </body>

@@ -56,13 +56,15 @@ Abre `http://localhost:3000`. El panel admin está en `/admin/login`.
 
 > ⚠️ El hash de ejemplo en `02_seed.sql` **no es válido**: genera el tuyo con `scripts/hash-password.js` y actualiza el registro antes de usarlo en producción.
 
-## Desplegar en Railway
+## Desplegar en Azure (recomendado)
 
-1. Crea un proyecto en Railway y añade el plugin/base de datos **SQL Server** (o tu propia instancia).
-2. Copia las credenciales (`server`, `puerto`, `usuario`, `password`, `database`) a las variables de entorno del servicio web en Railway (mismos nombres que en `.env.example`).
-3. Conecta este repositorio como servicio Node — Railway detecta `npm start` automáticamente.
-4. Corre `01_schema.sql` y `02_seed.sql` contra la base de Railway (puedes hacerlo desde tu máquina con `sqlcmd` apuntando al host público que te da Railway, o con Azure Data Studio).
-5. Genera el hash real del admin y actualízalo antes de anunciar el panel.
+1. Crea una **Azure SQL Database Free** y activa *Auto-pause when free limit reached* para no generar costos inesperados.
+2. Ejecuta `01_schema.sql` y luego `02_seed.sql` desde Azure Data Studio o `sqlcmd`.
+3. Crea un Web App Node.js en Azure App Service y configura las variables de `.env.example`, además de `NODE_ENV=production` y un `SESSION_SECRET` largo y aleatorio.
+4. Despliega el repositorio con el comando de inicio `npm start`.
+5. Genera un hash real para el administrador y actualiza el registro antes de habilitar el panel.
+
+> Las sesiones se guardan en `SesionesWeb`. Para una base nueva basta ejecutar el esquema actualizado; para una base que ya existe, ejecuta `sql/03_add_sessions.sql` una sola vez.
 
 ## Flujo de reservas (público)
 

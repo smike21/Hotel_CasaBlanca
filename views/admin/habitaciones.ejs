@@ -11,6 +11,7 @@
     <div class="card" style="margin-bottom: 30px;">
       <h2 style="font-size:1rem; margin-bottom: 16px;">Añadir habitación</h2>
       <form action="/admin/habitaciones" method="POST" class="modal-form">
+        <%- include('../partials/csrf') %>
         <div class="field"><label>Número</label><input type="text" name="numero" required></div>
         <div class="field">
           <label>Tipo</label>
@@ -30,7 +31,7 @@
       </form>
     </div>
 
-    <table class="data">
+    <div class="table-scroll"><table class="data">
       <thead><tr><th>N°</th><th>Tipo</th><th>Piso</th><th>Estado</th><th>Actualizar</th><th></th></tr></thead>
       <tbody>
         <% habitaciones.forEach(function(h) { %>
@@ -41,6 +42,7 @@
             <td><span class="badge badge-<%= h.estado_nombre.toLowerCase() %>"><%= h.estado_nombre %></span></td>
             <td>
               <form action="/admin/habitaciones/<%= h.id %>/estado" method="POST" style="display:flex; gap:8px;">
+                <%- include('../partials/csrf') %>
                 <select name="estado_id">
                   <% estados.forEach(function(e) { %>
                     <option value="<%= e.id %>" <%= e.id === h.estado_id ? 'selected' : '' %>><%= e.nombre %></option>
@@ -51,13 +53,14 @@
             </td>
             <td>
               <form action="/admin/habitaciones/<%= h.id %>/eliminar" method="POST" onsubmit="return confirm('¿Desactivar esta habitación?');">
+                <%- include('../partials/csrf') %>
                 <button type="submit" class="btn btn-outline" style="color:#8A2F26; border-color:#8A2F26;">Desactivar</button>
               </form>
             </td>
           </tr>
         <% }) %>
       </tbody>
-    </table>
+    </table></div>
   </main>
 </div>
 </body>

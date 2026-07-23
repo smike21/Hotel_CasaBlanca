@@ -18,7 +18,7 @@
     </div>
 
     <h2 style="font-size:1.2rem; margin-bottom: 16px;">Últimas reservas</h2>
-    <table class="data">
+    <div class="table-scroll"><table class="data">
       <thead><tr><th>Código</th><th>Huésped</th><th>Check-in</th><th>Check-out</th><th>Estado</th></tr></thead>
       <tbody>
         <% proximasReservas.forEach(function(r) { %>
@@ -31,7 +31,7 @@
           </tr>
         <% }) %>
       </tbody>
-    </table>
+    </table></div>
   </main>
 </div>
 </body>

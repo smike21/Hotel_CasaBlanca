@@ -226,8 +226,17 @@ CREATE TABLE MensajesContacto (
 );
 GO
 
+-- Sesiones persistentes del panel y formularios públicos.
+CREATE TABLE SesionesWeb (
+    sid       VARCHAR(128) PRIMARY KEY,
+    data      NVARCHAR(MAX) NOT NULL,
+    expira_en DATETIME2 NOT NULL
+);
+GO
+
 -- Índices útiles para disponibilidad y búsquedas
 CREATE INDEX IX_Reservas_Fechas ON Reservas(fecha_checkin, fecha_checkout);
 CREATE INDEX IX_DetalleReserva_Habitacion ON DetalleReserva(habitacion_id);
 CREATE INDEX IX_Habitaciones_Tipo ON Habitaciones(tipo_id);
+CREATE INDEX IX_SesionesWeb_ExpiraEn ON SesionesWeb(expira_en);
 GO

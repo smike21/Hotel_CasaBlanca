@@ -24,6 +24,7 @@
     <div class="card">
       <%- include('../partials/flash') %>
       <form action="/contacto" method="POST">
+        <%- include('../partials/csrf') %>
         <div class="field"><label>Nombre completo</label><input type="text" name="nombre" required></div>
         <div class="field"><label>Correo electrónico</label><input type="email" name="email" required></div>
         <div class="field"><label>Teléfono (opcional)</label><input type="text" name="telefono"></div>

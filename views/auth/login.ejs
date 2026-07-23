@@ -9,6 +9,7 @@
     </div>
     <%- include('../partials/flash') %>
     <form action="/admin/login" method="POST">
+      <%- include('../partials/csrf') %>
       <div class="field"><label>Correo electrónico</label><input type="email" name="email" required autofocus></div>
       <div class="field"><label>Contraseña</label><input type="password" name="password" required></div>
       <button type="submit" class="btn btn-clay" style="width:100%;">Ingresar</button>

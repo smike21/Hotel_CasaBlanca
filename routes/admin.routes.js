@@ -81,7 +81,7 @@ router.post('/habitaciones', requireRole('Administrador'), async (req, res, next
   } catch (err) { next(err); }
 });
 
-router.post('/habitaciones/:id/estado', async (req, res, next) => {
+router.post('/habitaciones/:id/estado', requireRole('Administrador', 'Recepcionista', 'Mantenimiento'), async (req, res, next) => {
   try {
     const pool = await getPool();
     await pool.request()
@@ -147,7 +147,7 @@ router.get('/reservas', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-router.post('/reservas/:id/estado', async (req, res, next) => {
+router.post('/reservas/:id/estado', requireRole('Administrador', 'Recepcionista'), async (req, res, next) => {
   try {
     const pool = await getPool();
     await pool.request()

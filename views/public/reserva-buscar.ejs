@@ -18,6 +18,7 @@
     <div class="card">
       <%- include('../partials/flash') %>
       <form action="/reserva/buscar" method="POST">
+        <%- include('../partials/csrf') %>
         <div class="field"><label>Check-in</label><input type="date" name="checkin" required></div>
         <div class="field"><label>Check-out</label><input type="date" name="checkout" required></div>
         <div class="field"><label>Número de huéspedes</label><input type="number" name="huespedes" min="1" value="2"></div>
