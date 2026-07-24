@@ -1,0 +1,13 @@
+name = "hotel-casablanca"
+main = "cloudflare/worker.js"
+compatibility_date = "2026-07-23"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "hotel-casablanca-db"
+database_id = "119193b0-637f-412d-b02f-5cd94a6a7427"
+migrations_dir = "cloudflare/migrations"
