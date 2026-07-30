@@ -1,28 +1,8 @@
 <!DOCTYPE html>
-<html lang="es">
-<head><%- include('../partials/head') %></head>
-<body>
-<div class="admin-shell">
-  <%- include('../partials/admin-sidebar', { active: 'mensajes' }) %>
-  <main class="admin-main">
-    <div class="admin-topbar"><h1>Mensajes de contacto</h1></div>
-    <%- include('../partials/flash') %>
-
-    <div class="table-scroll"><table class="data">
-      <thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Mensaje</th><th>Fecha</th></tr></thead>
-      <tbody>
-        <% mensajes.forEach(function(m) { %>
-          <tr>
-            <td><%= m.nombre %></td>
-            <td><%= m.email %></td>
-            <td><%= m.telefono || '—' %></td>
-            <td style="max-width: 320px;"><%= m.mensaje %></td>
-            <td><%= new Date(m.creado_en).toLocaleDateString('es-PE') %></td>
-          </tr>
-        <% }) %>
-      </tbody>
-    </table></div>
-  </main>
-</div>
-</body>
-</html>
+<html lang="es"><head><%- include('../partials/head') %></head><body>
+<div class="admin-shell"><%- include('../partials/admin-sidebar', { active: 'mensajes' }) %><main class="admin-main">
+  <div class="admin-topbar"><h1>Mensajes de contacto</h1></div><%- include('../partials/flash') %>
+  <div class="table-scroll"><table class="data"><thead><tr><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Mensaje</th><th>Fecha</th><th></th></tr></thead><tbody>
+  <% mensajes.forEach(function(m) { %><tr><td><%= m.nombre %></td><td><%= m.email %></td><td><%= m.telefono || '—' %></td><td style="max-width:320px"><%= m.mensaje %></td><td><%= new Date(m.creado_en).toLocaleDateString('es-PE') %></td><td><% if (!m.leido) { %><form action="/admin/mensajes/<%= m.id %>/leido" method="POST"><%- include('../partials/csrf') %><button class="btn btn-ghost-dark">Marcar leído</button></form><% } else { %><span class="badge badge-confirmada">Leído</span><% } %></td></tr><% }) %>
+  </tbody></table></div>
+</main></div></body></html>

@@ -126,35 +126,107 @@ router.post('/tipos-habitacion', requireRole('Administrador'), async (req, res, 
   } catch (err) { next(err); }
 });
 
+router.post('/tipos-habitacion/:id', requireRole('Administrador'), async (req, res, next) => {
+  try {
+    const { nombre, descripcion, capacidad, precio_base } = req.body;
+    const id = Number.parseInt(req.params.id, 10);
+    const price = Number.parseFloat(precio_base);
+    const guests = Number.parseInt(capacidad, 10);
+    if (!id || !nombre?.trim() || !Number.isInteger(guests) || guests < 1 || !Number.isFinite(price) || price < 0) {
+      req.flash('error', 'Revisa los datos del tipo de habitación.');
+      return res.redirect('/admin/tipos-habitacion');
+    }
+    const pool = await getPool();
+    await pool.request()
+      .input('id', sql.Int, id)
+      .input('nombre', sql.VarChar, nombre.trim())
+      .input('descripcion', sql.VarChar, descripcion?.trim() || null)
+      .input('capacidad', sql.Int, guests)
+      .input('precio_base', sql.Decimal(10, 2), price)
+      .query(`UPDATE TiposHabitacion SET nombre=@nombre, descripcion=@descripcion, capacidad=@capacidad, precio_base=@precio_base WHERE id=@id`);
+    req.flash('success', 'Tarifa y datos actualizados. Las reservas ya creadas conservan su precio pactado.');
+    res.redirect('/admin/tipos-habitacion');
+  } catch (err) { next(err); }
+});
+
 // ---------- Reservas ----------
 router.get('/reservas', async (req, res, next) => {
   try {
     const pool = await getPool();
-    const reservas = await pool.request().query(`
+    const { estado, desde, hasta, buscar } = req.query;
+    const request = pool.request();
+    const filters = [];
+    if (Number.isInteger(Number(estado)) && Number(estado) > 0) {
+      filters.push('r.estado_id = @estado'); request.input('estado', sql.Int, Number(estado));
+    }
+    if (/^\d{4}-\d{2}-\d{2}$/.test(desde || '')) { filters.push('r.fecha_checkin >= @desde'); request.input('desde', sql.Date, desde); }
+    if (/^\d{4}-\d{2}-\d{2}$/.test(hasta || '')) { filters.push('r.fecha_checkout <= @hasta'); request.input('hasta', sql.Date, hasta); }
+    if (buscar?.trim()) { filters.push("(r.codigo LIKE @buscar OR h.nombres LIKE @buscar OR h.apellidos LIKE @buscar)"); request.input('buscar', sql.VarChar, `%${buscar.trim()}%`); }
+    const reservas = await request.query(`
       SELECT r.*, h.nombres, h.apellidos, e.nombre AS estado_nombre,
-        STRING_AGG(hab.numero, ', ') AS habitaciones
+        h.email, h.telefono, STRING_AGG(hab.numero, ', ') AS habitaciones,
+        ISNULL((SELECT SUM(p.monto) FROM Pagos p WHERE p.reserva_id = r.id AND p.estado = 'Confirmado'), 0) AS pagado
       FROM Reservas r
       JOIN Huespedes h ON h.id = r.huesped_id
       JOIN EstadosReserva e ON e.id = r.estado_id
       LEFT JOIN DetalleReserva dr ON dr.reserva_id = r.id
       LEFT JOIN Habitaciones hab ON hab.id = dr.habitacion_id
+      ${filters.length ? `WHERE ${filters.join(' AND ')}` : ''}
       GROUP BY r.id, r.codigo, r.huesped_id, r.estado_id, r.fecha_checkin, r.fecha_checkout,
-        r.num_huespedes, r.total, r.notas, r.creado_por, r.creado_en, h.nombres, h.apellidos, e.nombre
+        r.num_huespedes, r.total, r.notas, r.creado_por, r.creado_en, h.nombres, h.apellidos, h.email, h.telefono, e.nombre
       ORDER BY r.creado_en DESC
     `);
     const estados = await pool.request().query('SELECT * FROM EstadosReserva ORDER BY id');
-    res.render('admin/reservas', { titulo: 'Reservas | Panel', reservas: reservas.recordset, estados: estados.recordset });
+    const metodos = await pool.request().query('SELECT * FROM MetodosPago ORDER BY nombre');
+    res.render('admin/reservas', { titulo: 'Reservas | Panel', reservas: reservas.recordset, estados: estados.recordset, metodos: metodos.recordset, filtros: { estado: estado || '', desde: desde || '', hasta: hasta || '', buscar: buscar || '' } });
   } catch (err) { next(err); }
 });
 
 router.post('/reservas/:id/estado', requireRole('Administrador', 'Recepcionista'), async (req, res, next) => {
   try {
     const pool = await getPool();
+    const reservaId = Number.parseInt(req.params.id, 10);
+    const estadoId = Number.parseInt(req.body.estado_id, 10);
+    const estado = await pool.request().input('id', sql.Int, estadoId).query('SELECT nombre FROM EstadosReserva WHERE id = @id');
+    if (!reservaId || !estado.recordset.length) {
+      req.flash('error', 'Estado de reserva inválido.');
+      return res.redirect('/admin/reservas');
+    }
     await pool.request()
       .input('id', sql.Int, req.params.id)
-      .input('estado_id', sql.Int, req.body.estado_id)
+      .input('estado_id', sql.Int, estadoId)
       .query('UPDATE Reservas SET estado_id = @estado_id WHERE id = @id');
-    req.flash('success', 'Estado de la reserva actualizado.');
+    const roomState = estado.recordset[0].nombre === 'CheckIn' ? 'Ocupada'
+      : estado.recordset[0].nombre === 'CheckOut' ? 'Limpieza'
+        : estado.recordset[0].nombre === 'Cancelada' ? 'Disponible' : null;
+    if (roomState) {
+      await pool.request().input('reserva_id', sql.Int, reservaId).input('estado', sql.VarChar, roomState).query(`
+        UPDATE h SET estado_id = eh.id FROM Habitaciones h
+        JOIN DetalleReserva dr ON dr.habitacion_id = h.id
+        JOIN EstadosHabitacion eh ON eh.nombre = @estado
+        WHERE dr.reserva_id = @reserva_id
+      `);
+    }
+    req.flash('success', `Reserva actualizada a ${estado.recordset[0].nombre}.`);
+    res.redirect('/admin/reservas');
+  } catch (err) { next(err); }
+});
+
+router.post('/reservas/:id/pagos', requireRole('Administrador', 'Recepcionista'), async (req, res, next) => {
+  try {
+    const reservaId = Number.parseInt(req.params.id, 10);
+    const metodoId = Number.parseInt(req.body.metodo_pago_id, 10);
+    const monto = Number.parseFloat(req.body.monto);
+    const referencia = req.body.referencia?.trim() || null;
+    if (!reservaId || !metodoId || !Number.isFinite(monto) || monto <= 0) {
+      req.flash('error', 'Ingresa un pago válido.');
+      return res.redirect('/admin/reservas');
+    }
+    const pool = await getPool();
+    await pool.request().input('reserva_id', sql.Int, reservaId).input('metodo_pago_id', sql.Int, metodoId)
+      .input('monto', sql.Decimal(10, 2), monto).input('referencia', sql.VarChar, referencia)
+      .query(`INSERT INTO Pagos (reserva_id, metodo_pago_id, monto, referencia) VALUES (@reserva_id, @metodo_pago_id, @monto, @referencia)`);
+    req.flash('success', 'Pago registrado correctamente.');
     res.redirect('/admin/reservas');
   } catch (err) { next(err); }
 });
@@ -179,6 +251,46 @@ router.get('/mensajes', async (req, res, next) => {
     const pool = await getPool();
     const mensajes = await pool.request().query('SELECT * FROM MensajesContacto ORDER BY creado_en DESC');
     res.render('admin/mensajes', { titulo: 'Mensajes | Panel', mensajes: mensajes.recordset });
+  } catch (err) { next(err); }
+});
+
+router.post('/mensajes/:id/leido', requireRole('Administrador', 'Recepcionista'), async (req, res, next) => {
+  try {
+    const pool = await getPool();
+    await pool.request().input('id', sql.Int, req.params.id).query('UPDATE MensajesContacto SET leido = 1 WHERE id = @id');
+    req.flash('success', 'Mensaje marcado como leído.');
+    res.redirect('/admin/mensajes');
+  } catch (err) { next(err); }
+});
+
+// ---------- Datos del hotel ----------
+router.get('/configuracion', requireRole('Administrador'), async (req, res, next) => {
+  try {
+    const pool = await getPool();
+    const result = await pool.request().query('SELECT clave, valor FROM Configuracion');
+    const configuracion = Object.fromEntries(result.recordset.map((item) => [item.clave, item.valor]));
+    res.render('admin/configuracion', { titulo: 'Configuración | Panel', configuracion });
+  } catch (err) { next(err); }
+});
+
+router.post('/configuracion', requireRole('Administrador'), async (req, res, next) => {
+  try {
+    const keys = ['nombre_hotel', 'ubicacion', 'telefono_contacto', 'email_contacto', 'checkin_hora', 'checkout_hora'];
+    const pool = await getPool();
+    const transaction = new sql.Transaction(pool);
+    await transaction.begin();
+    for (const key of keys) {
+      const value = String(req.body[key] || '').trim();
+      if (!value || value.length > 500) throw new Error('Completa todos los datos del hotel.');
+      await new sql.Request(transaction).input('clave', sql.VarChar, key).input('valor', sql.VarChar, value).query(`
+        MERGE Configuracion AS target USING (SELECT @clave AS clave, @valor AS valor) AS source ON target.clave = source.clave
+        WHEN MATCHED THEN UPDATE SET valor = source.valor
+        WHEN NOT MATCHED THEN INSERT (clave, valor) VALUES (source.clave, source.valor);
+      `);
+    }
+    await transaction.commit();
+    req.flash('success', 'Datos de contacto y horarios actualizados.');
+    res.redirect('/admin/configuracion');
   } catch (err) { next(err); }
 });
 

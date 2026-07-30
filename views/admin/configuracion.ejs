@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><%- include('../partials/head') %></head>
+<body>
+<div class="admin-shell">
+  <%- include('../partials/admin-sidebar', { active: 'configuracion' }) %>
+  <main class="admin-main">
+    <div class="admin-topbar"><h1>Configuración del hotel</h1></div>
+    <%- include('../partials/flash') %>
+    <div class="card" style="max-width:760px;">
+      <p style="margin-top:0; color:#55483C;">Actualiza el contacto y los horarios que usa el hotel.</p>
+      <form action="/admin/configuracion" method="POST" class="modal-form">
+        <%- include('../partials/csrf') %>
+        <div class="field"><label>Nombre del hotel</label><input name="nombre_hotel" value="<%= configuracion.nombre_hotel || 'Hotel Casa Blanca' %>" required></div>
+        <div class="field"><label>Teléfono de contacto</label><input name="telefono_contacto" value="<%= configuracion.telefono_contacto || '' %>" required></div>
+        <div class="field full"><label>Ubicación</label><input name="ubicacion" value="<%= configuracion.ubicacion || '' %>" required></div>
+        <div class="field full"><label>Correo de contacto</label><input type="email" name="email_contacto" value="<%= configuracion.email_contacto || '' %>" required></div>
+        <div class="field"><label>Hora de check-in</label><input type="time" name="checkin_hora" value="<%= configuracion.checkin_hora || '14:00' %>" required></div>
+        <div class="field"><label>Hora de check-out</label><input type="time" name="checkout_hora" value="<%= configuracion.checkout_hora || '11:00' %>" required></div>
+        <div class="full"><button class="btn btn-clay">Guardar configuración</button></div>
+      </form>
+    </div>
+  </main>
+</div>
+</body>
+</html>

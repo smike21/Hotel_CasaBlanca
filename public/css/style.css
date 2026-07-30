@@ -303,6 +303,11 @@ table.data tr:last-child td { border-bottom: none; }
 .flash-error { background: #F3D8D5; color: #8A2F26; border: 1px solid #E3B3AD; }
 
 .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 16px; flex-wrap: wrap; }
+.filter-form { display: grid; grid-template-columns: 1.5fr repeat(3, 1fr) auto; gap: 14px; align-items: end; margin-bottom: 24px; padding: 20px; }
+.filter-form .field { margin: 0; }
+.inline-form { display: grid; gap: 6px; margin-top: 8px; min-width: 190px; }
+details summary { cursor: pointer; color: var(--clay-dark); font-size: .8rem; margin-top: 6px; }
+table.data small { color: #6b5c4d; font-size: .76rem; }
 .modal-form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .modal-form .full { grid-column: 1 / -1; }
 
@@ -335,6 +340,7 @@ table.data tr:last-child td { border-bottom: none; }
   .admin-sidebar nav form { margin: 0 0 0 8px !important; min-width: 130px; }
   .stat-cards { grid-template-columns: 1fr 1fr; }
   .modal-form { grid-template-columns: 1fr; }
+  .filter-form { grid-template-columns: 1fr 1fr; }
   .admin-main { padding: 26px 18px; }
 }
 
@@ -343,6 +349,7 @@ table.data tr:last-child td { border-bottom: none; }
   .brand-mark small { font-size: .52rem; }
   .site-header .btn { padding: 10px 12px; }
   .booking-bar { grid-template-columns: 1fr; padding: 18px; }
+  .filter-form { grid-template-columns: 1fr; }
   .stat-cards { grid-template-columns: 1fr; }
   section { padding: 58px 0; }
 }

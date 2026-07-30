@@ -1,39 +1,18 @@
 <!DOCTYPE html>
-<html lang="es">
-<head><%- include('../partials/head') %></head>
-<body>
-<div class="admin-shell">
-  <%- include('../partials/admin-sidebar', { active: 'tipos' }) %>
-  <main class="admin-main">
-    <div class="admin-topbar"><h1>Tipos de habitación</h1></div>
-    <%- include('../partials/flash') %>
-
-    <div class="card" style="margin-bottom: 30px;">
-      <h2 style="font-size:1rem; margin-bottom: 16px;">Nuevo tipo</h2>
-      <form action="/admin/tipos-habitacion" method="POST" class="modal-form">
-        <%- include('../partials/csrf') %>
-        <div class="field"><label>Nombre</label><input type="text" name="nombre" required></div>
-        <div class="field"><label>Capacidad</label><input type="number" name="capacidad" required></div>
-        <div class="field"><label>Precio base (S/ por noche)</label><input type="number" step="0.01" name="precio_base" required></div>
-        <div class="field full"><label>Descripción</label><input type="text" name="descripcion"></div>
-        <div class="full"><button type="submit" class="btn btn-clay">Guardar tipo</button></div>
-      </form>
-    </div>
-
-    <div class="table-scroll"><table class="data">
-      <thead><tr><th>Nombre</th><th>Capacidad</th><th>Precio base</th><th>Descripción</th></tr></thead>
-      <tbody>
-        <% tipos.forEach(function(t) { %>
-          <tr>
-            <td><%= t.nombre %></td>
-            <td><%= t.capacidad %></td>
-            <td>S/ <%= Number(t.precio_base).toFixed(2) %></td>
-            <td><%= t.descripcion || '—' %></td>
-          </tr>
-        <% }) %>
-      </tbody>
-    </table></div>
-  </main>
-</div>
-</body>
-</html>
+<html lang="es"><head><%- include('../partials/head') %></head><body>
+<div class="admin-shell"><%- include('../partials/admin-sidebar', { active: 'tipos' }) %><main class="admin-main">
+  <div class="admin-topbar"><h1>Tipos y tarifas</h1></div><%- include('../partials/flash') %>
+  <div class="card" style="margin-bottom:30px"><h2 style="font-size:1rem;margin-bottom:16px">Nuevo tipo de habitación</h2>
+    <form action="/admin/tipos-habitacion" method="POST" class="modal-form"><%- include('../partials/csrf') %>
+      <div class="field"><label>Nombre</label><input name="nombre" required></div><div class="field"><label>Capacidad</label><input type="number" name="capacidad" min="1" required></div>
+      <div class="field"><label>Precio por noche (S/)</label><input type="number" name="precio_base" min="0" step="0.01" required></div><div class="field full"><label>Descripción</label><input name="descripcion"></div>
+      <div class="full"><button class="btn btn-clay">Crear tipo</button></div></form>
+  </div>
+  <p style="font-size:.86rem;color:#55483C">Los precios editados se aplican a reservas nuevas; el monto de reservas existentes se conserva.</p>
+  <div class="table-scroll"><table class="data"><thead><tr><th>Tipo</th><th>Capacidad</th><th>Precio por noche</th><th>Descripción</th><th></th></tr></thead><tbody>
+  <% tipos.forEach(function(t) { var formId = 'tipo-' + t.id; %><tr>
+    <td><input form="<%= formId %>" name="nombre" value="<%= t.nombre %>" required></td><td><input form="<%= formId %>" type="number" name="capacidad" value="<%= t.capacidad %>" min="1" required></td>
+    <td><input form="<%= formId %>" type="number" name="precio_base" value="<%= Number(t.precio_base).toFixed(2) %>" min="0" step="0.01" required></td><td><input form="<%= formId %>" name="descripcion" value="<%= t.descripcion || '' %>"></td>
+    <td><form id="<%= formId %>" action="/admin/tipos-habitacion/<%= t.id %>" method="POST"><%- include('../partials/csrf') %><button class="btn btn-ghost-dark">Guardar</button></form></td></tr><% }) %>
+  </tbody></table></div>
+</main></div></body></html>

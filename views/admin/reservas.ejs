@@ -1,40 +1,16 @@
 <!DOCTYPE html>
-<html lang="es">
-<head><%- include('../partials/head') %></head>
-<body>
-<div class="admin-shell">
-  <%- include('../partials/admin-sidebar', { active: 'reservas' }) %>
-  <main class="admin-main">
-    <div class="admin-topbar"><h1>Reservas</h1></div>
-    <%- include('../partials/flash') %>
-
-    <div class="table-scroll"><table class="data">
-      <thead><tr><th>Código</th><th>Huésped</th><th>Habitación(es)</th><th>Check-in</th><th>Check-out</th><th>Total</th><th>Estado</th></tr></thead>
-      <tbody>
-        <% reservas.forEach(function(r) { %>
-          <tr>
-            <td><%= r.codigo %></td>
-            <td><%= r.nombres %> <%= r.apellidos %></td>
-            <td><%= r.habitaciones || '—' %></td>
-            <td><%= new Date(r.fecha_checkin).toLocaleDateString('es-PE') %></td>
-            <td><%= new Date(r.fecha_checkout).toLocaleDateString('es-PE') %></td>
-            <td>S/ <%= Number(r.total).toFixed(2) %></td>
-            <td>
-              <form action="/admin/reservas/<%= r.id %>/estado" method="POST" style="display:flex; gap:8px;">
-                <%- include('../partials/csrf') %>
-                <select name="estado_id">
-                  <% estados.forEach(function(e) { %>
-                    <option value="<%= e.id %>" <%= e.id === r.estado_id ? 'selected' : '' %>><%= e.nombre %></option>
-                  <% }) %>
-                </select>
-                <button type="submit" class="btn btn-ghost-dark">Cambiar</button>
-              </form>
-            </td>
-          </tr>
-        <% }) %>
-      </tbody>
-    </table></div>
-  </main>
-</div>
-</body>
-</html>
+<html lang="es"><head><%- include('../partials/head') %></head><body>
+<div class="admin-shell"><%- include('../partials/admin-sidebar', { active: 'reservas' }) %><main class="admin-main">
+  <div class="admin-topbar"><h1>Reservas</h1></div><%- include('../partials/flash') %>
+  <form action="/admin/reservas" method="GET" class="card filter-form">
+    <div class="field"><label>Buscar</label><input name="buscar" value="<%= filtros.buscar %>" placeholder="Código o huésped"></div>
+    <div class="field"><label>Estado</label><select name="estado"><option value="">Todos</option><% estados.forEach(function(e) { %><option value="<%= e.id %>" <%= String(e.id) === String(filtros.estado) ? 'selected' : '' %>><%= e.nombre %></option><% }) %></select></div>
+    <div class="field"><label>Check-in desde</label><input type="date" name="desde" value="<%= filtros.desde %>"></div><div class="field"><label>Check-out hasta</label><input type="date" name="hasta" value="<%= filtros.hasta %>"></div><button class="btn btn-ghost-dark">Filtrar</button>
+  </form>
+  <div class="table-scroll"><table class="data"><thead><tr><th>Código</th><th>Huésped</th><th>Habitación(es)</th><th>Estadía</th><th>Cobro</th><th>Estado</th></tr></thead><tbody>
+  <% reservas.forEach(function(r) { %><tr><td><strong><%= r.codigo %></strong></td><td><strong><%= r.nombres %> <%= r.apellidos %></strong><br><small><%= r.email || '—' %><br><%= r.telefono || '' %></small></td><td><%= r.habitaciones || '—' %></td>
+    <td><%= new Date(r.fecha_checkin).toLocaleDateString('es-PE') %><br>→ <%= new Date(r.fecha_checkout).toLocaleDateString('es-PE') %><br><small><%= r.num_huespedes %> huésped(es)</small></td>
+    <td><strong>S/ <%= Number(r.total).toFixed(2) %></strong><br><small>Pagado: S/ <%= Number(r.pagado).toFixed(2) %><br>Saldo: S/ <%= Math.max(0, Number(r.total) - Number(r.pagado)).toFixed(2) %></small><details><summary>Registrar pago</summary><form action="/admin/reservas/<%= r.id %>/pagos" method="POST" class="inline-form"><%- include('../partials/csrf') %><select name="metodo_pago_id"><% metodos.forEach(function(m) { %><option value="<%= m.id %>"><%= m.nombre %></option><% }) %></select><input type="number" name="monto" min="0.01" max="<%= Math.max(0, Number(r.total) - Number(r.pagado)) %>" step="0.01" required placeholder="Monto"><input name="referencia" placeholder="Referencia"><button class="btn btn-clay">Registrar</button></form></details></td>
+    <td><form action="/admin/reservas/<%= r.id %>/estado" method="POST" class="inline-form"><%- include('../partials/csrf') %><select name="estado_id"><% estados.forEach(function(e) { %><option value="<%= e.id %>" <%= e.id === r.estado_id ? 'selected' : '' %>><%= e.nombre %></option><% }) %></select><button class="btn btn-ghost-dark">Actualizar</button></form></td></tr><% }) %>
+  </tbody></table></div>
+</main></div></body></html>
