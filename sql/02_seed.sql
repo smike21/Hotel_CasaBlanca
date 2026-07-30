@@ -8,9 +8,9 @@ INSERT INTO Roles (nombre, descripcion) VALUES
 ('Mantenimiento', 'Actualiza el estado de limpieza/mantenimiento de habitaciones');
 GO
 
--- Contraseña por defecto para el admin: "CasaBlanca2026" (hash bcrypt generado en README)
+-- Credenciales por defecto: admin@hotelcasablanca.pe / CasaBlanca2026
 INSERT INTO Usuarios (rol_id, nombres, apellidos, email, password_hash) VALUES
-(1, 'Sly', 'Simeón Chávez', 'admin@hotelcasablanca.pe', '$2b$10$P8x3n0m2s6iH8lHf3G9tBOQ7iH1Iw0m8Zt2Q0Zf1c1c1c1c1c1c1O');
+(1, 'Sly', 'Simeón Chávez', 'admin@hotelcasablanca.pe', '$2b$10$0GuajFZd9mp7I3MYX8cDOe.Mep9tKcDf8TWqtcaQFCK0EK.kV2KTC');
 GO
 
 INSERT INTO EstadosHabitacion (nombre) VALUES ('Disponible'), ('Ocupada'), ('Limpieza'), ('Mantenimiento');

@@ -54,7 +54,8 @@ npm run dev                # o: npm start
 
 Abre `http://localhost:3000`. El panel admin está en `/admin/login`.
 
-> ⚠️ El hash de ejemplo en `02_seed.sql` **no es válido**: genera el tuyo con `scripts/hash-password.js` y actualiza el registro antes de usarlo en producción.
+Credenciales por defecto del panel: `admin@hotelcasablanca.pe` / `CasaBlanca2026`.
+Para producción, cambia la contraseña y actualiza el hash con `scripts/hash-password.js`.
 
 ## Desplegar en Azure (recomendado)
 
