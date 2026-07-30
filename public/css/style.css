@@ -313,6 +313,7 @@ table.data small { color: #6b5c4d; font-size: .76rem; }
 
 @media (max-width: 900px) {
   nav.main-nav { display: none; }
+  .desktop-login { display: none; }
   .site-header .container { gap: 10px; }
   .mobile-menu { display: block; position: relative; }
   .mobile-menu summary {
